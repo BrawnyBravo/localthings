@@ -27,6 +27,28 @@ LocalThings connects Home Assistant to Samsung washers, dryers, refrigerators, a
 - **Your data stays home.** LocalThings sends nothing to Samsung. The appliance itself still keeps its own connection to Samsung, and LocalThings doesn't change that.
 - **Setup needs an IP address.** For most appliances, you enter the address and LocalThings works out the type and model, then creates matching controls and sensors.
 
+## What this fork changes
+
+This is a personal fork of [mbillow/localthings](https://github.com/mbillow/localthings) v0.33.0, all credit to its author. It changes one thing: harmless oven and range settings work with Smart Control (Remote Control) off, the way they do in the SmartThings app. Anything that heats or starts a cycle still needs Smart Control.
+
+**Now allowed with Smart Control off** (each write is read back, and you are told if the appliance ignored it):
+
+| Control | Evidence |
+| --- | --- |
+| Oven lamp | Upstream's oven module notes the lamp write is proven with Remote Control off. Issues #183 and #500: the SmartThings app turns the light on without Smart Control. |
+| Oven sound | Issues #183 and #500: the app changes sound without Smart Control. |
+| 120-hour energy saving | Issue #183: on a TP1X range, "Smart control doesn't gate any settings" (sound, light, energy saving); only starting a cook differs. |
+
+Upstream v0.33.0 already allowed Stop and Sync clock with Remote Control off; this fork keeps both.
+
+The read-back now treats an options write as taken when the written token is in the appliance's options list, since the appliance merges one token into its full list. Without that, every waived options write would be reported as ignored.
+
+**Still needs Smart Control:** oven mode, setpoint, cook time, Start cooking, fast preheat, natural steam, cooktop-on alert, every cooktop and warming-drawer control, and washer and dryer cycle start and pause. Washers and dryers keep upstream's behaviour unchanged: firmware that declares itself settable without Smart Control (`isModelSettingWithoutSC`) already takes settings with it off, other laundry settings stay gated, and there is no evidence the app allows more than that.
+
+**Refrigerators** report no Remote Control lock at all, so none of their writes was ever blocked; nothing changes there.
+
+Do not use the per-device option "Allow writes even when remote control is reported off" with this fork: it lifts the check for cooking too.
+
 ## What it supports
 
 | Appliance | Appliance |

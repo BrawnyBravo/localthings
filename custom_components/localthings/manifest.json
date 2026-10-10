@@ -6,12 +6,12 @@
   "config_flow": true,
   "dependencies": [],
   "dhcp": [{ "registered_devices": true }],
-  "documentation": "https://github.com/mbillow/localthings",
+  "documentation": "https://github.com/BrawnyBravo/localthings",
   "iot_class": "local_push",
-  "issue_tracker": "https://github.com/mbillow/localthings/issues",
+  "issue_tracker": "https://github.com/BrawnyBravo/localthings/issues",
   "requirements": [
     "cbor2>=5.4.6",
     "smartthings-local>=0.1.23"
   ],
-  "version": "0.33.0"
+  "version": "0.33.0-bb.1"
 }
