@@ -37,7 +37,6 @@ from .const import (
 from .coordinator import LocalThingsCoordinator, normalize_href, split_href_query
 from .registry.capabilities import cook
 from .registry.encode import json_safe
-from .registry.redact import redact_resources
 from .registry.subdevices import MAIN, Subdevice
 
 ATTR_HREF = "href"
@@ -215,11 +214,8 @@ async def _async_read_resource(hass: HomeAssistant, call: ServiceCall) -> Servic
         # canonical_resources).
         # device_resources, not canonical_resources: this response is what
         # the appliance reported, without the fields this integration merges
-        # on for its own use (see coordinator.entity_resources). Redacted
-        # like a diagnostics download, since it is the same whole-tree dump.
-        snapshot: dict[str, Any] = {
-            "resources": redact_resources(coordinator.device_resources(subdevice))
-        }
+        # on for its own use (see coordinator.entity_resources).
+        snapshot: dict[str, Any] = {"resources": coordinator.device_resources(subdevice)}
         return cast(ServiceResponse, json_safe(snapshot))
 
     # A `?a=b&c=d` suffix becomes URI-Query options, e.g. `if=oic.if.b` to

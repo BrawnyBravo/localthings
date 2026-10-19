@@ -919,26 +919,6 @@ async def test_read_resource_without_href_returns_cached_snapshot_and_does_not_g
     assert response["resources"]["/mode/vs/0"] == {"x.field": "cached"}
 
 
-async def test_read_resource_snapshot_is_redacted_like_diagnostics(hass, coordinator, device_id):
-    coordinator._session = _FakeSession()
-    coordinator._observe.apply(
-        "/information/vs/0",
-        {"x.com.samsung.email": "someone@example.com", "x.field": "kept"},
-        source="poll",
-    )
-    coordinator._observe.apply(
-        "/wificonf", {"tnn": "ExampleNet", "cd": "passphrase"}, source="poll"
-    )
-
-    response = await _call_read(hass, device_id)
-
-    assert response["resources"]["/information/vs/0"] == {
-        "x.com.samsung.email": "**REDACTED**",
-        "x.field": "kept",
-    }
-    assert response["resources"]["/wificonf"] == {"tnn": "**REDACTED**", "cd": "**REDACTED**"}
-
-
 # ----------------------------------------------------------------------
 # The raw actions are admin-only
 # ----------------------------------------------------------------------
